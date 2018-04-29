@@ -4,7 +4,7 @@ A game based on Star Wars. Darth Vader is hunting you inside the Jedi Temple, an
 ## Developers
 * [Bruno Vieira](github.com/brunovieira97)
 * [Jaqueline Steffenon](github.com/Jaquelineds)
-* [Jo„o Palharini](github.com/jpalharini)
+* [Jo√£o Palharini](github.com/jpalharini)
 * [Joice Gomes](github.com/joicecg)
-* [Julio Renner](github.com/asuha)
+* [Julio Renner](github.com/juliorenner)
 * [Maiara Lange](github.com/maiaralange)
