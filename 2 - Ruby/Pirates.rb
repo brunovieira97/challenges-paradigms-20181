@@ -7,34 +7,21 @@ class Mapa
   attr_accessor :matriz
   attr_reader :matriz
   attr_writer :matriz
+
+  PECAS = [{ "size": 2, "key": 1}, { "size": 2, "key": 2}, { "size": 2, "key": 2}, { "size": 3, "key": 3}]
+
   def initialize
-    @matriz = Array.new(8) { Array.new(3, 0) }
-    # Nos
-    @matriz[0][0] = 1
-    @matriz[1][0] = 1
-    
-    # Inimigo normal 1
-    @matriz[3][0] = 2
-    @matriz[3][1] = 2
-    
-    # Inimigo normal 2
-    @matriz[1][2] = 2
-    @matriz[2][2] = 2
-    
-    # Fantasma
-    @matriz[5][1] = 3
-    @matriz[6][1] = 3
-    @matriz[7][1] = 3
+    @matriz = Array.new(8) { Array.new(3, 0) } 
+
+    insereNavios()
   end
   
-  def insere(tipo)
-    x = rand(0...7)
-    y = rand(0...2)
+  def obtemCoordenada
+    coord = {}
+    coord['x'] = rand(7)
+    coord['y'] = rand(2)
     
-    case tipo
-    when 1..2 
-      #if(@matriz[x][y] == 0)
-    end
+    coord
   end
   
   def atira(x, y)
@@ -44,7 +31,7 @@ class Mapa
       puts "Voce esta aqui!"
     elsif (matriz[x][y] == 2 or matriz[x][y] == 3)
       puts "Acertou o inimigo"
-      matriz[x][y] = 4
+      self.matriz[x][y] = 4
     else
       puts "Tiro na agua"
     end
@@ -55,9 +42,9 @@ class Mapa
     countFantasma = 0
     for y in 0..2
       for x in 0..7
-        if (matriz[x][y] == 2)
+        if (self.matriz[x][y] == 2)
           countNormal = countNormal + 1
-        elsif (matriz[x][y] == 3)
+        elsif (self.matriz[x][y] == 3)
           countFantasma = countFantasma + 1
         end
       end
@@ -66,6 +53,55 @@ class Mapa
       puts "Ganhou"
     elsif (countNormal == 0)
       puts "Ganhou"
+    end
+  end
+  
+  def verificaCoordenada(coord, size, direcao)
+    x = coord['x']
+    y = coord['y']
+
+    while size > 0
+      p "x: " + x.to_s
+      p "y: " + y.to_s
+      p self.matriz
+      if x < self.matriz.length and y < self.matriz[0].length and self.matriz[x][y] == 0
+        size = size -1
+        if direcao == 1
+          x = x + 1
+        else
+          y = y + 1
+        end
+      else
+        return false
+      end
+    end
+    
+    return true
+  end
+  
+  def insereNavios()
+
+    for navio in PECAS
+      posicao = obtemCoordenada()
+      direcao = rand(0..1)
+      
+      while !verificaCoordenada(posicao, navio[:size], direcao)
+        direcao = rand(0..1)
+        posicao = obtemCoordenada()
+      end
+      
+      size = navio[:size]
+      while size > 0
+        self.matriz[posicao['x']][posicao['y']] = navio[:key]
+
+        if direcao == 1
+          posicao['x'] = posicao['x'] + 1
+        else
+          posicao['y'] = posicao['y'] + 1
+        end
+        
+        size -= 1
+      end
     end
   end
   
@@ -81,6 +117,5 @@ class Mapa
 end
 
 mapa = Mapa.new()
-mapa.atira(1,1)
 
 mapa.print()
