@@ -1,72 +1,71 @@
-# Pirates of the Caribbean - Naval Battle
-# 0 = agua / 1 = nos / 2 = inimigo normal / 3 = fantasma / 4 = ja atirou
+=begin
+  Map identifiers
+  0 - Water
+  1 - Our ship
+  2 - EIC enemy ship
+  3 - Flying Dutch
+  4 - Hit
+=end
 
 require 'matrix'
 
-class Mapa
-  attr_accessor :matriz
-  attr_reader :matriz
-  attr_writer :matriz
+class SeaMap
+  attr_accessor :matrix
+  attr_reader :matrix
+  attr_writer :matrix
 
-  PECAS = [{ "size": 2, "key": 1}, { "size": 2, "key": 2}, { "size": 2, "key": 2}, { "size": 3, "key": 3}]
+  PIECES = [{ "size": 2, "key": 1}, { "size": 2, "key": 2}, { "size": 2, "key": 2}, { "size": 3, "key": 3}]
 
   def initialize
-    @matriz = Array.new(8) { Array.new(3, 0) } 
-
-    insereNavios()
+    @matrix = Array.new(8) { Array.new(3, 0) } 
+    insertShips()
   end
   
-  def obtemCoordenada
+  def getCoordinates
     coord = {}
     coord['x'] = rand(7)
     coord['y'] = rand(2)
-    
     coord
   end
   
-  def atira(x, y)
+  def shoot(x, y)
     if (x > 7 or y > 2 or x < 0 or y < 0)
-      puts "Posicao invalida"
-    elsif (matriz[x][y] == 1)
-      puts "Voce esta aqui!"
-    elsif (matriz[x][y] == 2 or matriz[x][y] == 3)
-      puts "Acertou o inimigo"
-      self.matriz[x][y] = 4
+      puts "Posicao inválida!"
+    elsif (matrix[x][y] == 1)
+      puts "Voce está aqui."
+    elsif (matrix[x][y] == 2 or matrix[x][y] == 3)
+      puts "Acertou o inimigo!"
+      self.matrix[x][y] = 4
     else
-      puts "Tiro na agua"
+      puts "Tiro na água!"
     end
   end
   
-  def ganhou
-    countNormal = 0
-    countFantasma = 0
+  def won
+    enemyCount = 0
     for y in 0..2
       for x in 0..7
-        if (self.matriz[x][y] == 2)
-          countNormal = countNormal + 1
-        elsif (self.matriz[x][y] == 3)
-          countFantasma = countFantasma + 1
+        if (self.matrix[x][y] == 2 or self.matrix[x][y] == 3)
+          enemyCount += 1
         end
       end
     end
-    if (countFantasma == 0)
-      puts "Ganhou"
-    elsif (countNormal == 0)
-      puts "Ganhou"
+    if enemyCount == 0
+      puts "Ganhou!"
     end
   end
   
-  def verificaCoordenada(coord, size, direcao)
+  def verifyCoordinates(coord, size, direction)
     x = coord['x']
     y = coord['y']
 
     while size > 0
       p "x: " + x.to_s
       p "y: " + y.to_s
-      p self.matriz
-      if x < self.matriz.length and y < self.matriz[0].length and self.matriz[x][y] == 0
+      p self.matrix
+      if x < self.matrix.length and y < self.matrix[0].length and self.matrix[x][y] == 0
         size = size -1
-        if direcao == 1
+        if direction == 1
           x = x + 1
         else
           y = y + 1
@@ -79,25 +78,24 @@ class Mapa
     return true
   end
   
-  def insereNavios()
-
-    for navio in PECAS
-      posicao = obtemCoordenada()
-      direcao = rand(0..1)
+  def insertShips()
+    for ship in PIECES
+      position = getCoordinates()
+      direction = rand(0..1)
       
-      while !verificaCoordenada(posicao, navio[:size], direcao)
-        direcao = rand(0..1)
-        posicao = obtemCoordenada()
+      while !verifyCoordinates(position, ship[:size], direction)
+        direction = rand(0..1)
+        position = getCoordinates()
       end
       
-      size = navio[:size]
+      size = ship[:size]
       while size > 0
-        self.matriz[posicao['x']][posicao['y']] = navio[:key]
+        self.matrix[position['x']][position['y']] = ship[:key]
 
-        if direcao == 1
-          posicao['x'] = posicao['x'] + 1
+        if direction == 1
+          position['x'] = position['x'] + 1
         else
-          posicao['y'] = posicao['y'] + 1
+          position['y'] = position['y'] + 1
         end
         
         size -= 1
@@ -109,13 +107,13 @@ class Mapa
     for y in 0..2
       output = ""
       for x in 0..7
-        output = output + "\t" + matriz[x][y].to_s
+        output = output + "\t" + matrix[x][y].to_s
       end
       puts output
     end
   end
 end
 
-mapa = Mapa.new()
+map = SeaMap.new()
 
-mapa.print()
+map.print()
