@@ -30,29 +30,34 @@ class SeaMap
   
   def shoot(x, y)
     if (x > 7 or y > 2 or x < 0 or y < 0)
-      puts "Posicao inv�lida!"
+      puts "Posicão inválida!"
     elsif (matrix[x][y] == 1)
-      puts "Voce est� aqui."
+      puts "Voce está aqui."
     elsif (matrix[x][y] == 2 or matrix[x][y] == 3)
       puts "Acertou o inimigo!"
       self.matrix[x][y] = 4
     else
-      puts "Tiro na �gua!"
+      puts "Tiro na água!"
     end
   end
   
   def won
-    enemyCount = 0
+    blackPearl = 0
+    ghost = 0
     for y in 0..2
       for x in 0..7
-        if (self.matrix[x][y] == 2 or self.matrix[x][y] == 3)
-          enemyCount += 1
+        if (self.matrix[x][y] == 2)
+          blackPearl += 1
+        elsif (self.matrix[x][y] == 3)
+          ghost += 1
         end
       end
     end
-    if enemyCount == 0
-      puts "Ganhou!"
+    if (blackPearl == 0 or ghost == 0)
+      return true
     end
+
+    return false
   end
   
   def verifyCoordinates(coord, size, direction)
@@ -60,9 +65,6 @@ class SeaMap
     y = coord['y']
 
     while size > 0
-      p "x: " + x.to_s
-      p "y: " + y.to_s
-      p self.matrix
       if x < self.matrix.length and y < self.matrix[0].length and self.matrix[x][y] == 0
         size = size -1
         if direction == 1
@@ -115,5 +117,34 @@ class SeaMap
 end
 
 map = SeaMap.new()
+kraquen = rand(7..24)
+
+puts "O jogo pirata vai começar!"
+map.print()
+
+won = false
+count = 0
+
+while (won == false and count < kraquen) do
+  puts "Informe a coluna (eixo X) na qual você deseja atirar:"
+  x = gets.chomp.to_i
+  puts "Informe a linha (eixo Y) na qual você deseja atirar:"
+  y = gets.chomp.to_i
+
+  map.shoot(x, y);
+  map.print()
+
+  if (map.won())
+    won = true
+  end
+
+  count += 1
+end
+
+if (won == true)
+  puts "Você é um baita pirata! Ganhou sapequinha!"
+elsif
+  puts "No céu tem pão? E morreu!"
+end
 
 map.print()
