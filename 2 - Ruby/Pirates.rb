@@ -2,9 +2,8 @@
   Map identifiers
   0 - Water
   1 - Our ship
-  2 - EIC enemy ship
+  2 - EITC enemy ship
   3 - Flying Dutch
-  4 - Hit
 =end
 
 require 'matrix'
@@ -35,29 +34,26 @@ class SeaMap
       puts "Voce está aqui."
     elsif (matrix[x][y] == 2 or matrix[x][y] == 3)
       puts "Acertou o inimigo!"
-      self.matrix[x][y] = 4
+      self.matrix[x][y] = 0
     else
       puts "Tiro na água!"
     end
   end
   
   def won
-    blackPearl = 0
-    ghost = 0
+    enemyCount = 0
     for y in 0..2
       for x in 0..7
-        if (self.matrix[x][y] == 2)
-          blackPearl += 1
-        elsif (self.matrix[x][y] == 3)
-          ghost += 1
+        if (self.matrix[x][y].between?(2, 3))
+          enemyCount += 1
         end
       end
     end
-    if (blackPearl == 0 or ghost == 0)
-      return true
+    if (enemyCount != 0)
+      return false
     end
 
-    return false
+    return true
   end
   
   def verifyCoordinates(coord, size, direction)
@@ -117,19 +113,26 @@ class SeaMap
 end
 
 map = SeaMap.new()
-kraquen = rand(7..24)
+kraken = rand(7..24)
 
 puts "O jogo pirata vai começar!"
+puts "LEGENDA: "
+puts "  0 - Água "
+puts "  1 - Você"
+puts "  2 - Navio da Cia. das Índias Orientais"
+puts "  3 - Holandês Voador"
+puts ""
+
 map.print()
 
 won = false
 count = 0
 
-while (won == false and count < kraquen) do
+while (won == false and count < kraken) do
   puts "Informe a coluna (eixo X) na qual você deseja atirar:"
-  x = gets.chomp.to_i
+  x = gets.chomp.to_i - 1
   puts "Informe a linha (eixo Y) na qual você deseja atirar:"
-  y = gets.chomp.to_i
+  y = gets.chomp.to_i - 1
 
   map.shoot(x, y);
   map.print()
@@ -144,7 +147,9 @@ end
 if (won == true)
   puts "Você é um baita pirata! Ganhou sapequinha!"
 elsif
+  if (count == kraken)
+    puts "O Kraken foi solto!"
+  end
+
   puts "No céu tem pão? E morreu!"
 end
-
-map.print()
