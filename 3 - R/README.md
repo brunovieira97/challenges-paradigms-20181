@@ -14,5 +14,7 @@ Using R language, we must provide the following informations on our report:
 ## Developers
 * [Bruno Vieira](github.com/brunovieira97)
 * [Jaqueline Steffenon](github.com/Jaquelineds)
-* [Jo„o Palharini](github.com/jpalharini)
+* [Jo√£o Palharini](github.com/jpalharini)
 * [Joice Gomes](github.com/joicecg)
+* [Julio Renner](github.com/asuha)
+* [Maiara Lange](github.com/maiaralange)
