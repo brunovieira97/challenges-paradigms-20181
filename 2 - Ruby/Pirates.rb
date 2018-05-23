@@ -2,10 +2,10 @@
   Map identifiers
   0 - Water
   1 - Our ship
-  2 - EIC enemy ship
+  2 - EITC enemy ship
   3 - Flying Dutch
   4 - Hit 
-  5 - Shoot at water
+  5 - Shot on water
 =end
 
 require 'matrix'
@@ -30,36 +30,43 @@ class SeaMap
   end
   
   def shoot(x, y)
-    if (x > 8 or y > 3 or x <= 0 or y <= 0)
+    if !isValidCoordinate(x, y)
       puts "Posicão inválida!"
-    elsif (matrix[x-1][y-1] == 1)
-      puts "Voce está aqui."
-    elsif (matrix[x-1][y-1] == 2 or matrix[x-1][y-1] == 3)
-      puts "Acertou o inimigo!"
-      self.matrix[x-1][y-1] = 4
     else
-      puts "Tiro na água!"
-      self.matrix[x-1][y-1] = 5
+      coordinateValue = matrix[x-1][y-1]
+      newValue = 0
+
+      if (coordinateValue == 1)
+        puts "Voce está aqui."
+      elsif (coordinateValue.between?(2, 3))
+        puts "Acertou o inimigo!"
+        newValue = 4
+      elsif (coordinateValue.between?(4, 5))
+        puts "Posição já acertada!"
+      else
+        puts "Tiro na água!"
+        newValue = 5
+      end
+
+      if newValue > 0
+        changeCoordinateValue(x, y, newValue)
+      end
     end
   end
   
   def won
-    blackPearl = 0
-    ghost = 0
+    enemyCount = 0
     for y in 0..2
       for x in 0..7
-        if (self.matrix[x][y] == 2)
-          blackPearl += 1
-        elsif (self.matrix[x][y] == 3)
-          ghost += 1
+        if (self.matrix[x][y].between?(2, 3))
+          enemyCount += 1
         end
       end
     end
-    if (blackPearl == 0 or ghost == 0)
-      return true
+    if (enemyCount != 0)
+      return false
     end
-
-    return false
+    return true
   end
   
   def verifyCoordinates(coord, size, direction)
@@ -130,19 +137,29 @@ class SeaMap
       puts output 
     end
   end
+
+  def isValidCoordinate(x, y)
+    if (x > 8 or y > 3 or x <= 0 or y <= 0)
+      return false
+    end
+    return true
+  end
+
+  def changeCoordinateValue(x, y, newValue)
+    self.matrix[x-1][y-1] = newValue
+  end
 end
 
 map = SeaMap.new()
-kraquen = rand(7..24)
+krakenRound = rand(7..24)
 
 puts "O jogo pirata vai começar!"
 map.showToPlayer
-#map.print()
 
-won = false
-count = 0
+hasWon = false
+roundCount = 0
 
-while (won == false and count < kraquen) do
+while (hasWon == false and roundCount <= krakenRound) do
   puts "Informe a coluna (eixo X) na qual você deseja atirar:"
   x = gets.chomp.to_i
   puts "Informe a linha (eixo Y) na qual você deseja atirar:"
@@ -150,17 +167,17 @@ while (won == false and count < kraquen) do
 
   map.shoot(x, y);
   map.showToPlayer()
-  #map.print()
 
   if (map.won())
-    won = true
+    hasWon = true
+  elsif (roundCount == krakenRound)
+    puts "O Kraken foi solto!"
   end
-
-  count += 1
+  roundCount += 1
 end
 
-if (won == true)
+if hasWon
   puts "Você é um baita pirata! Ganhou sapequinha!"
-elsif
+else
   puts "No céu tem pão? E morreu!"
 end
