@@ -2,7 +2,7 @@ import string
 from random import random, randint, shuffle
 
 def selectWord():
-  words = ['GUERRA', 'ALEMANHA', 'GÁS', 'MORTAL', 'ARMAS', 'INIMIGO', 'GANHAR', 'PERDER', 'BATALHA', 'EXERCITO', 'SOLDADO']
+  words = ['GUERRA', 'ALEMANHA', 'MORTAL', 'ARMAS', 'INIMIGO', 'GANHAR', 'PERDER', 'BATALHA', 'EXERCITO', 'SOLDADO']
   return words[randint(0, len(words)-1)]
 
 def shuffleWord(selectedWord):
