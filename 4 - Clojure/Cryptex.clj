@@ -1,18 +1,9 @@
-(require '[clojure.string :as str])
+(def input ["t" "e" "s" "t" "e"])
 
-(def cryptexKey "apple")
-(def count 5)
+(def userEntry (atom []))
 
-(def receiveKey 
-  (let [input (read-line)]
-    (def inputKey input)
-  )
-)
-           
-receiveKey
+(println "Inform the 5 letter keys: ")
 
-inputKey
+(dotimes [n 5] (swap! userEntry conj (read-line)))
 
-
-
-;(def testKey (fn [inputKey] (str "Hello " cryptexKey)))
+(= (compare @userEntry input) 0)
